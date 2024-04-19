@@ -1,11 +1,11 @@
-# Bucket to store website
+# Bucket to store our website 
 resource "google_storage_bucket" "website" {
   provider = google
-  name     = "example-rishab-coffee7"
+  name     = "example-samet-coffee7"
   location = "US"
 }
 
-# Make new objects public
+# Make our new objects public to see for all user
 resource "google_storage_object_access_control" "public_rule" {
   object = google_storage_bucket_object.static_site_src.output_name
   bucket = google_storage_bucket.website.name
@@ -18,7 +18,7 @@ resource "google_storage_object_access_control" "public_rule" {
 #  entity = "allUsers"
 #}
 
-# Upload the html file to the bucket
+# Upload the html file to the bucket so everything will be automated
 resource "google_storage_bucket_object" "static_site_src" {
   name   = "index.html"
   source = "../website/index.html"
@@ -26,7 +26,7 @@ resource "google_storage_bucket_object" "static_site_src" {
   
 }
 
-# Reserve an external IP
+# Reserve an external IP is a must
 resource "google_compute_global_address" "website" {
   provider = google
   name     = "website-lb-ip"
@@ -35,7 +35,7 @@ resource "google_compute_global_address" "website" {
 # Get the managed DNS zone
 data "google_dns_managed_zone" "gcp_coffeetime_dev" {
   provider = google
-  name     = "rishab-example"
+  name     = "samet-example"
 }
 
 # Add the IP to the DNS
@@ -57,7 +57,7 @@ resource "google_compute_backend_bucket" "website-backend" {
   enable_cdn  = true
 }
 
-# Create HTTPS certificate
+# Create HTTPS certificate for safety
 resource "google_compute_managed_ssl_certificate" "website" {
   provider = google-beta
   name     = "website-cert"
