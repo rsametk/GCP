@@ -1,11 +1,11 @@
-# Bucket to store our website 
+# Bucket to store website 
 resource "google_storage_bucket" "website" {
   provider = google
   name     = "example-samet-coffee7"
   location = "US"
 }
 
-# Make our new objects public to see for all user
+# Make our new website public to see for all user
 resource "google_storage_object_access_control" "public_rule" {
   object = google_storage_bucket_object.static_site_src.output_name
   bucket = google_storage_bucket.website.name
@@ -26,19 +26,19 @@ resource "google_storage_bucket_object" "static_site_src" {
   
 }
 
-# Reserve an external IP is a must
+# Reserve an external IP is a must for IP pool
 resource "google_compute_global_address" "website" {
   provider = google
   name     = "website-lb-ip"
 }
 
-# Get the managed DNS zone
+# Get the managed DNS zone for gcp
 data "google_dns_managed_zone" "gcp_coffeetime_dev" {
   provider = google
   name     = "samet-example"
 }
 
-# Add the IP to the DNS
+# Add the IP to the DOmain name services
 resource "google_dns_record_set" "website" {
   provider     = google
   name         = "website.${data.google_dns_managed_zone.gcp_coffeetime_dev.dns_name}"
